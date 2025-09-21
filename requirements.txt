@@ -2,5 +2,5 @@ pandas==2.2.2
 numpy==1.26.4
 requests==2.32.3
 requests-cache==1.2.1
-pandas_ta @ git+https://github.com/twopirllc/pandas-ta@0.3.14b0
+pandas_ta==0.3.14b0
 python-dotenv==1.0.1
