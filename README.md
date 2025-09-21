@@ -1,34 +1,17 @@
-# MEXC Micro-cap Scanner (CoinGecko + Multi-Timeframe)
+# MEXC Micro-cap Scanner — Dockerized
 
-Scanner quét **toàn bộ cặp USDT trên MEXC**, ưu tiên token **vốn hóa nhỏ** (dựa vào CoinGecko `< $50M`, fallback theo 24h quoteVolume) và lọc tín hiệu:
-- **MACD cross up**
-- **RSI > ngưỡng**
-- **ADX > ngưỡng**
-- **Volume surge** (Vol > MULT × SMA20)
+This repo includes a **Dockerfile** pinned to **Python 3.11** to avoid build issues on Railway/Nixpacks.
 
-Đồng thời yêu cầu **đồng thuận khung chậm (4h)**: ADX, EMA200, MACD.
+## Deploy on Railway (Docker flow)
+1. Create a new Railway project → **Deploy from GitHub** (recommended) or **Upload** this zip.
+2. In **Settings → Deployment Method**, ensure it's using **Dockerfile** (not Nixpacks).
+3. Add environment variables in **Variables** (copy from `.env.example`).
+4. Deploy. Railway will build the image via the Dockerfile and start with `python scanner.py`.
 
-## Cài đặt
+### Local run (Docker)
 ```bash
-pip install -r requirements.txt
-cp .env.example .env   # điền TELEGRAM_* nếu muốn bắn cảnh báo
-python scanner.py
+docker build -t mexc-scanner .
+docker run --env-file .env mexc-scanner
 ```
 
-## ENV chính
-- `INTERVAL_FAST` / `INTERVAL_SLOW` : mặc định `1h` / `4h`
-- `USE_COINGECKO=true` + `CG_MAX_MCAP_USD=50000000`
-- Fallback proxy: `MAX_24H_QUOTE_VOL=5000000`
-- Chỉ báo nhanh: `RSI_MIN_FAST=50`, `ADX_MIN_FAST=20`, `VOL_MULTIPLIER=2.0`, `NEEDED_OK_FAST=3`
-- Xác nhận chậm: `ADX_MIN_SLOW=18`, `EMA_TREND_SLOW=true`, `MACD_TREND_SLOW=true`
-
-## Gửi Telegram
-Khai báo `TELEGRAM_BOT_TOKEN` và `TELEGRAM_CHAT_ID` để nhận cảnh báo.
-
-## Dùng futures klines (tùy chọn)
-Đặt `USE_FUTURES=true`. Lưu ý endpoint dùng format `BTC_USDT` và interval được map sang giây trong mã.
-
-## Ghi chú
-- Mapping CoinGecko theo **symbol** có thể trùng tên. Mã lấy **market cap nhỏ nhất** quan sát được cho ký hiệu đó (an toàn hơn). Có thể nâng cấp mapping theo **contract** nếu cần chính xác hơn.
-- Hạn chế rate: đã dùng `requests-cache` cho CoinGecko (cache vài phút).
-- Nên giữ `CONCURRENCY` 4–8 để an toàn.
+If you prefer Nixpacks without Dockerfile, set Python version to 3.11 and tighten requirements (numpy>=2.0 for Python 3.12) and keep a **Start Command**: `python scanner.py`.

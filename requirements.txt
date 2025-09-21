@@ -1,6 +1,8 @@
 pandas==2.2.2
+# numpy 1.26.x works with Python 3.11 (our Docker base). If you switch to Py3.12, use numpy>=2.0
 numpy==1.26.4
 requests==2.32.3
 requests-cache==1.2.1
-pandas_ta==0.3.14b0
+# pandas-ta newer beta works well under Py3.11/Py3.12
+pandas-ta==0.5.25b0
 python-dotenv==1.0.1
