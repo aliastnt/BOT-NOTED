@@ -1,0 +1,16 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "nixpacks": {
+      "plan": {
+        "providers": [
+          "python"
+        ]
+      }
+    }
+  },
+  "deploy": {
+    "startCommand": "python scanner.py",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}
